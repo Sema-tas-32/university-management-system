@@ -1,0 +1,111 @@
+@model List<Obs_Proje.Models.OgrenciNotu>
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Öğrenci Paneli - Transkript</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .navbar { background-color: #2c3e50; }
+        .card-header { background-color: #ffffff; border-bottom: 2px solid #ffc107; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-dark px-4 shadow-sm">
+        <span class="navbar-brand mb-0 h1">🎓 Fırat Üniversitesi OBS</span>
+        <div class="d-flex align-items-center text-white gap-3">
+            <span>Hoşgeldin, <b>Öğrenci</b></span>
+            <a href="/Home/Index" class="btn btn-danger btn-sm">Güvenli Çıkış</a>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <h4 class="mb-0 text-dark">📄 Not Durum Belgesi (Transkript)</h4>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover table-striped mb-0">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th>Ders Adı</th>
+                            <th>Sınıf</th>
+                            <th>Vize</th>
+                            <th>Final</th>
+                            <th>Ortalama</th>
+                            <th>Harf Notu</th>
+                            <th>GNO (4'lük)</th>
+                            <th>Durum</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Count > 0)
+                        {
+                            @foreach (var ogr in Model)
+                            {
+                                <tr>
+                                    <td class="fw-bold text-primary">@ogr.LessonName</td>
+                                    <td>@ogr.ClassLevel. Sınıf</td>
+                                    <td>@ogr.MidtermExam</td>
+                                    <td>@ogr.FinalExam</td>
+                                    <td>@ogr.Average.ToString("0.0")</td>
+                                    <td>
+                                        @{
+                                            string harf = ""; string renk = ""; double gno = 0;
+                                            double ort = ogr.Average;
+
+                                            if (ort >= 90) { harf = "AA"; renk = "bg-success"; gno = 4.0; }
+                                            else if (ort >= 85) { harf = "BA"; renk = "bg-success"; gno = 3.5; }
+                                            else if (ort >= 80) { harf = "BB"; renk = "bg-primary"; gno = 3.0; }
+                                            else if (ort >= 75) { harf = "CB"; renk = "bg-primary"; gno = 2.5; }
+                                            else if (ort >= 70) { harf = "CC"; renk = "bg-info text-dark"; gno = 2.0; }
+                                            else if (ort >= 60) { harf = "DD"; renk = "bg-warning text-dark"; gno = 1.0; }
+                                            else { harf = "FF"; renk = "bg-danger"; gno = 0.0; }
+                                        }
+                                        <span class="badge @renk">@harf</span>
+                                    </td>
+                                    <td class="fw-bold">@gno.ToString("0.00")</td>
+                                    <td>
+                                        <span class="badge @(ogr.IsPassed ? "bg-success" : "bg-danger")">
+                                            @(ogr.IsPassed ? "GEÇTİ" : "KALDI")
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="8" class="text-center p-4 text-muted">
+                                    <h5>📭 Henüz sisteme girilmiş bir notunuz bulunmuyor.</h5>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <div class="card shadow-sm border-0 bg-primary text-white text-center p-3">
+                    <small>Genel Ortalama (GNO)</small>
+                    <h3 class="fw-bold">@(Model != null && Model.Any() ? Model.Average(x => x.Average / 25).ToString("0.00") : "0.00")</h3>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card shadow-sm border-0 bg-warning text-dark text-center p-3">
+                    <small>Toplam Devamsızlık</small>
+                    <h3 class="fw-bold">@(Model?.Sum(x => x.Attendance) ?? 0) Saat</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

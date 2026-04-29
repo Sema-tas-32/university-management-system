@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fırat Üniversitesi OBS Giriş</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+    /* GENEL AYARLAR (Sıfırlama) */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+        font-family: 'Lato', sans-serif;
+        height: 100vh;
+        display: flex;
+        overflow: hidden; /* Kaydırma çubuklarını gizle */
+    }
+
+    /* === SOL TARAF - GÖRSEL VE MARKA ALANI === */
+    .brand-section {
+        flex: 1.4; /* Sol taraf sağdan biraz daha geniş */
+        
+        /* ARKA PLAN GÖRSELİ AYARI */
+        /* Not: Kendi firat.jpg fotoğrafını kullanmak için aşağıdaki url(...) kısmını değiştir. */
+        background: linear-gradient(rgba(0, 51, 102, 0.85), rgba(0, 30, 80, 0.95)), /* Fırat Üni kurumsal mavi tonlama */
+                    url('https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') no-repeat center center/cover;
+        
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; /* İçeriği alt ve üste yay */
+        padding: 60px;
+        color: #fff;
+    }
+
+    .brand-logo {
+        font-family: 'Playfair Display', serif;
+        font-size: 28px;
+        letter-spacing: 2px;
+        font-weight: 700;
+        color: #f0f0f0; /* Kırık beyaz */
+    }
+
+    .brand-quote h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 52px;
+        line-height: 1.2;
+        margin-bottom: 25px;
+        color: #d4af37; /* Altın sarısı vurgu rengi */
+    }
+
+    .brand-quote p {
+        font-size: 18px;
+        opacity: 0.9;
+        max-width: 500px;
+        line-height: 1.6;
+        font-weight: 400;
+    }
+
+    .brand-footer {
+        font-size: 13px;
+        opacity: 0.6;
+        letter-spacing: 1px;
+    }
+
+    /* === SAĞ TARAF - GİRİŞ FORMU ALANI === */
+    .login-section {
+        flex: 1; /* Sağ taraf daha dar */
+        background-color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .login-wrapper {
+        width: 100%;
+        max-width: 400px;
+        padding: 40px;
+    }
+
+    .login-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 38px;
+        color: #0a192f; /* Koyu Lacivert */
+        margin-bottom: 10px;
+    }
+
+    .login-subtitle {
+        color: #8892b0; /* Grimsi mavi */
+        margin-bottom: 45px;
+        font-size: 15px;
+    }
+
+    /* --- FLOATING LABEL (YÜZEN ETİKET) TASARIMI (Ustalık Eseri Kısım) --- */
+    .input-group {
+        position: relative;
+        margin-bottom: 35px;
+    }
+
+    /* Input alanı */
+    .input-group input {
+        width: 100%;
+        padding: 15px 5px;
+        font-size: 16px;
+        color: #0a192f;
+        border: none;
+        border-bottom: 2px solid #e0e0e0; /* Standart alt çizgi */
+        outline: none;
+        background: transparent;
+        transition: border-color 0.3s;
+        font-family: 'Lato', sans-serif;
+    }
+
+    /* Etiket (Label) */
+    .input-group label {
+        position: absolute;
+        top: 15px;
+        left: 5px;
+        font-size: 16px;
+        color: #8892b0;
+        pointer-events: none; /* Tıklamayı engelle, inputa geçsin */
+        transition: 0.3s ease all; /* Yumuşak geçiş efekti */
+    }
+
+    /* Animasyon: Inputa odaklanınca (focus) VEYA içi doluysa (valid) etiket yukarı çıkar */
+    .input-group input:focus ~ label,
+    .input-group input:valid ~ label {
+        top: -12px;
+        font-size: 13px;
+        font-weight: 700;
+        color: #d4af37; /* Aktif olunca Altın rengi */
+    }
+
+    /* Inputa odaklanınca alt çizgi rengi değişsin */
+    .input-group input:focus {
+        border-bottom: 2px solid #d4af37;
+    }
+
+    /* --- BUTON --- */
+    .btn-premium {
+        width: 100%;
+        padding: 18px;
+        background-color: #0a192f; /* Koyu lacivert zemin */
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 25px;
+        border-radius: 4px;
+    }
+
+    .btn-premium:hover {
+        background-color: #d4af37; /* Üzerine gelince altın sarısı olsun */
+        color: #0a192f; /* Yazı rengi koyu olsun */
+        box-shadow: 0 10px 20px rgba(10, 25, 47, 0.15);
+    }
+
+</style>
+</head>
+<body>
+
+    <div class="brand-section">
+        <div class="brand-logo">T.C. FIRAT ÜNİVERSİTESİ</div>
+        <div class="brand-quote">
+            <h1>Bilim ve Teknoloji<br>Üssü.</h1>
+            <p>Öğrenci Bilgi Sistemine (OBS) hoş geldiniz. Akademik işlemlerinize devam etmek için lütfen giriş yapınız.</p>
+        </div>
+        <div class="brand-footer">© 2025 FIRAT ÜNİVERSİTESİ BİLGİ İŞLEM DAİRE BAŞKANLIĞI</div>
+    </div>
+
+    <div class="login-section">
+        <div class="login-wrapper">
+            <h2 class="login-title">Sisteme Giriş</h2>
+            <p class="login-subtitle">Öğretmen veya Öğrenci bilgilerinizi giriniz.</p>
+
+            <form>
+                <div class="input-group">
+                    <input type="text" id="username" required>
+                    <label for="username">Kullanıcı Adı / Öğrenci No</label>
+                </div>
+
+                <div class="input-group">
+                    <input type="password" id="password" required>
+                    <label for="password">Şifre</label>
+                </div>
+
+                <button type="button" class="btn-premium">GÜVENLİ GİRİŞ YAP</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

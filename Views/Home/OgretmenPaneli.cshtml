@@ -1,0 +1,197 @@
+@model List<Obs_Proje.Models.OgrenciNotu>
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Öğretmen Paneli - Fırat OBS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f4f7f6; }
+        .nav-tabs .nav-link { color: #495057; font-weight: 600; border: none; padding: 12px 20px; }
+        .nav-tabs .nav-link.active { color: #0d6efd; border-bottom: 3px solid #0d6efd; background: transparent; }
+        .card { border: none; border-radius: 10px; }
+        .table thead { background-color: #343a40; color: white; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-dark bg-primary px-4 shadow">
+        <span class="navbar-brand mb-0 h1">🎓 Fırat OBS - Akademisyen Sistemi</span>
+        <div class="text-white">
+            <span class="me-3">👤 @ViewBag.HocaAdi | 📚 <b>@ViewBag.DersAdi</b></span>
+            <a href="/Home/Index" class="btn btn-danger btn-sm shadow-sm">Güvenli Çıkış</a>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        
+        <ul class="nav nav-tabs mb-4" id="ogretmenTab" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active" id="not-tab" data-bs-toggle="tab" data-bs-target="#not-bolumu" type="button">📝 Not İşlemleri</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" id="devam-tab" data-bs-toggle="tab" data-bs-target="#devam-bolumu" type="button">📉 Devamsızlık Takibi</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="ogretmenTabContent">
+            
+            <div class="tab-pane fade show active" id="not-bolumu" role="tabpanel">
+                
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 text-primary fw-bold">➕ Yeni Öğrenci Notu Ekle</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="/Home/NotEkle">
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-bold">Öğrenci Adı Soyadı</label>
+                                    <input type="text" name="adSoyad" class="form-control" placeholder="Örn: Mustafa Bahar" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label small fw-bold">Sınıf</label>
+                                    <select name="sinif" class="form-select">
+                                        <option value="1">1. Sınıf</option>
+                                        <option value="2">2. Sınıf</option>
+                                        <option value="3">3. Sınıf</option>
+                                        <option value="4">4. Sınıf</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label small fw-bold">Vize (%40)</label>
+                                    <input type="number" name="vize" class="form-control" min="0" max="100" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label small fw-bold">Final (%60)</label>
+                                    <input type="number" name="final" class="form-control" min="0" max="100" required>
+                                </div>
+                                <div class="col-md-2 d-grid">
+                                    <label class="form-label">&nbsp;</label>
+                                    <button type="submit" class="btn btn-success fw-bold">KAYDET</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-bold text-dark">📋 @ViewBag.DersAdi - Not Listesi</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-striped table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Öğrenci Adı</th>
+                                    <th>Vize</th>
+                                    <th>Final</th>
+                                    <th>Ortalama</th>
+                                    <th>Harf</th>
+                                    <th>Durum</th>
+                                    <th>İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var ogr in Model)
+                                {
+                                    <tr>
+                                        <td>@ogr.Id</td>
+                                        <td class="fw-bold">@ogr.StudentName</td>
+                                        <td>@ogr.MidtermExam</td>
+                                        <td>@ogr.FinalExam</td>
+                                        <td class="text-primary fw-bold">@ogr.Average.ToString("0.0")</td>
+                                        <td><span class="badge bg-secondary">@ogr.LetterGrade</span></td>
+                                        <td>
+                                            @if (ogr.IsPassed) { <span class="badge bg-success">GEÇTİ</span> }
+                                            else { <span class="badge bg-danger">KALDI</span> }
+                                        </td>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                <a href="/Home/NotDuzenle?id=@ogr.Id" class="btn btn-warning btn-sm">✏️</a>
+                                                <form method="post" action="/Home/NotSil" onsubmit="return confirm('Silinsin mi?');">
+                                                    <input type="hidden" name="id" value="@ogr.Id" />
+                                                    <button type="submit" class="btn btn-danger btn-sm">🗑️</button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="devam-bolumu" role="tabpanel">
+                
+                <div class="card shadow-sm mb-4 border-start border-warning border-5">
+                    <div class="card-body">
+                        <h5 class="fw-bold text-warning mb-3">🕒 Devamsızlık Güncelle</h5>
+                        <form method="post" action="/Home/DevamsizlikGuncelle">
+                            <div class="row g-3 align-items-end">
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold">Öğrenci Seçin</label>
+                                    <select name="ogrenciId" class="form-select">
+                                        @foreach(var ogr in Model) {
+                                            <option value="@ogr.Id">@ogr.StudentName</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label small fw-bold">Toplam Devamsızlık (Saat)</label>
+                                    <input type="number" name="yeniSaat" class="form-control" min="0" placeholder="Örn: 4" required>
+                                </div>
+                                <div class="col-md-3 d-grid">
+                                    <button type="submit" class="btn btn-warning fw-bold text-dark">GÜNCELLE</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm">
+                    <div class="card-body p-0">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Öğrenci Adı</th>
+                                    <th>Ders</th>
+                                    <th>Toplam Devamsızlık</th>
+                                    <th>Durum (%20 Sınırı)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var ogr in Model) {
+                                <tr>
+                                    <td>@ogr.StudentName</td>
+                                    <td><span class="badge bg-info text-dark">@ogr.LessonName</span></td>
+                                    <td class="fw-bold text-danger">@ogr.Attendance Saat</td>
+                                    <td style="width: 300px;">
+                                        @{
+                                            // Basit bir yüzde hesabı (Örn: Sınır 20 saat olsun)
+                                            int sinir = 20;
+                                            int yuzde = (ogr.Attendance * 100) / sinir;
+                                            if(yuzde > 100) yuzde = 100;
+                                            string renk = yuzde >= 100 ? "bg-danger" : "bg-warning";
+                                        }
+                                        <div class="progress" style="height: 15px;">
+                                            <div class="progress-bar @renk" style="width: @yuzde%">@yuzde%</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div> 
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
